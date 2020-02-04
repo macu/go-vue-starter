@@ -1,0 +1,40 @@
+* {
+	box-sizing: border-box;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	display: block;
+	margin: 0;
+	padding: 20px 1cm;
+	color: white;
+	background-color: blue;
+}
+
+.content-area {
+	padding: 1cm;
+}
+
+p.error {
+	font-weight: bold;
+	color: red;
+	margin-bottom: 20px;
+}
+
+form table {
+	border-collapse: separate;
+	border-spacing: 20px 10px;
+}
+form td:first-child {
+	text-align: right;
+}
+form label {
+	font-weight: bold;
+}
+form input {
+	width: 400px;
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<title>Go Vue Starter</title>
+
+<link rel="shortcut icon" href="/img/favicon.png"/>
+<link rel="stylesheet" href="/css/compiled.css"/>
+
+<script>
+// Authenticated user details
+window.user = {
+	id: "{{.UserID}}",
+	username: "{{.Username}}",
+};
+</script>
+
+</head>
+<body>
+
+	<div id="app"></div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.runtime.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.1.1/vuex.min.js"></script>
+	<script src="/js/compiled.js"></script>
+
+</body>
+</html>
