@@ -12,11 +12,11 @@ module.exports = {
 		path: __dirname + '/js',
 	},
 	externals: {
-		jquery: 'jQuery',
-		vue: 'Vue',
-		vuex: 'Vuex',
+		'jquery': 'jQuery',
+		'vue': 'Vue',
+		'vuex': 'Vuex',
 		'vue-router': 'VueRouter',
-		dragula: 'dragula',
+		'dragula': 'dragula',
 	},
 	module: {
 		rules: [
@@ -54,7 +54,7 @@ module.exports = {
 							},
 						},
 					},
-				]
+				],
 			},
 		],
 	},

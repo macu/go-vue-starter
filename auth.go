@@ -81,10 +81,11 @@ func makeAuthenticator(db *sql.DB) func(handler AuthenticatedRoute) func(http.Re
 				}
 				// update cookie expires time
 				http.SetCookie(w, &http.Cookie{
-					Name:    sessionTokenCookieName,
-					Value:   sessionTokenCookie.Value,
-					Path:    "/",
-					Expires: expires,
+					Name:     sessionTokenCookieName,
+					Value:    sessionTokenCookie.Value,
+					Path:     "/",
+					Expires:  expires,
+					HttpOnly: true,
 				})
 			}
 			// invoke route with authenticated user info
