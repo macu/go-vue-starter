@@ -1,15 +1,12 @@
 <template>
 <div class="app">
 	<div class="header">
-		<h1>Go Vue Starter</h1>
+		<h1 @click="gotoIndex()">Go Vue Starter</h1>
+		<span>{{username}}</span>
 		<button @click="logout()" size="mini">Log out</button>
 	</div>
 	<div class="content-area">
-		Vue app running
-		<br/><br/>
-		Username: {{username}}
-		<br/><br/>
-		<button @click="testAjax()">Test AJAX</button>
+		<router-view></router-view>
 	</div>
 </div>
 </template>
@@ -17,21 +14,21 @@
 <script>
 import $ from 'jquery';
 import store from './store.js';
+import router from './router.js';
 
 export default {
 	store,
+	router,
 	computed: {
 		username() {
 			return this.$store.getters.username;
 		},
 	},
 	methods: {
-		testAjax() {
-			$.get('/ajax/test').then(response => {
-				alert(response.message);
-			}).fail(jqXHR => {
-				alert(jqXHR.status);
-			});
+		gotoIndex() {
+			if (this.$route.name !== 'index') {
+				this.$router.push({name: 'index'});
+			}
 		},
 		logout() {
 			window.location.href = '/logout';
@@ -51,6 +48,10 @@ export default {
 		>h1 {
 			flex: 1;
 			margin: 0;
+			cursor: pointer;
+		}
+		>*:not(:last-child) {
+			margin-right: 20px;
 		}
 	}
 	>.content-area {

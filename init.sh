@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Exit when any command fails
+set -e
+
 # Prompt for username and password
 read -p "Enter a test username [test]: " username
 read -sp "Enter a test password [test]: " password
