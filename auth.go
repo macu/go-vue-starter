@@ -1,14 +1,16 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
+	"encoding/binary"
 	"fmt"
 	"html/template"
 	"log"
 	"math/rand"
+	crypto_rand "math/rand"
 	"net/http"
 	"strings"
-	"sync"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -40,20 +42,26 @@ func makeAuthenticator(db *sql.DB) func(handler AuthenticatedRoute) func(http.Re
 	if err != nil {
 		panic(err)
 	}
+
 	// Return factory function for wrapping handlers that require authentication
 	return func(handler AuthenticatedRoute) func(http.ResponseWriter, *http.Request) {
+
 		// Return standard http.Handler which calls the authenticated handler passing db and userID
 		return func(w http.ResponseWriter, r *http.Request) {
+
+			// Read auth cookie
 			sessionTokenCookie, err := r.Cookie(sessionTokenCookieName)
 			if err == http.ErrNoCookie {
 				if isAjax(r) {
 					w.WriteHeader(http.StatusForbidden)
 				} else {
+					// Redirect to login if no auth cookie
 					http.Redirect(w, r, "/login", http.StatusSeeOther)
 				}
 				return
 			}
-			// get authenticated user ID
+
+			// Look up session and read authenticated userID
 			now := time.Now()
 			var userID uint
 			var expires time.Time
@@ -62,6 +70,7 @@ func makeAuthenticator(db *sql.DB) func(handler AuthenticatedRoute) func(http.Re
 				if isAjax(r) {
 					w.WriteHeader(http.StatusForbidden)
 				} else {
+					// Redirect to login if no valid session
 					http.Redirect(w, r, "/login", http.StatusSeeOther)
 				}
 				return
@@ -70,8 +79,11 @@ func makeAuthenticator(db *sql.DB) func(handler AuthenticatedRoute) func(http.Re
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
+
+			// Refresh session and cookie if old
 			if expires.Before(now.Add(sessionTokenCookieRenewIfExpiresIn)) {
-				// update session expires time
+
+				// Update session expires time
 				expires := now.Add(sessionTokenCookieExpiry)
 				_, err = updateSessionStmt.Exec(expires, sessionTokenCookie.Value)
 				if err != nil {
@@ -79,7 +91,8 @@ func makeAuthenticator(db *sql.DB) func(handler AuthenticatedRoute) func(http.Re
 					w.WriteHeader(http.StatusInternalServerError)
 					return
 				}
-				// update cookie expires time
+
+				// Update cookie expires time
 				http.SetCookie(w, &http.Cookie{
 					Name:     sessionTokenCookieName,
 					Value:    sessionTokenCookie.Value,
@@ -88,7 +101,8 @@ func makeAuthenticator(db *sql.DB) func(handler AuthenticatedRoute) func(http.Re
 					HttpOnly: true,
 				})
 			}
-			// invoke route with authenticated user info
+
+			// Invoke route with authenticated user info
 			handler(db, userID, w, r)
 		}
 	}
@@ -170,19 +184,32 @@ func logoutHandler(db *sql.DB, userID uint, w http.ResponseWriter, r *http.Reque
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
-var sessionRandGen = rand.New(rand.NewSource(time.Now().UnixNano()))
-var sessionRandMutex = &sync.Mutex{}
-
 const sessionRandLetters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 // Returns a random session ID that includes current Unix time in nanoseconds.
 func makeSessionID() string {
-	bytes := make([]byte, 9)
-	sessionRandMutex.Lock()
-	for i := range bytes {
-		bytes[i] = sessionRandLetters[sessionRandGen.Intn(len(sessionRandLetters))]
+	var seed int64
+	var b [8]byte
+	_, err := crypto_rand.Read(b[:])
+	if err != nil {
+		log.Printf("Failed to read session ID random generator seed bytes with crypto/rand: %v", err)
+		seed = time.Now().UnixNano()
+	} else {
+		buf := bytes.NewBuffer(b[:])
+		err = binary.Read(buf, binary.LittleEndian, &seed)
+		if err != nil {
+			log.Printf("Failed to read session ID random generator seed with binary.Read: %v", err)
+			seed = time.Now().UnixNano()
+		}
 	}
-	sessionRandMutex.Unlock()
+
+	randGen := rand.New(rand.NewSource(seed))
+
+	bytes := make([]byte, 9)
+	for i := range bytes {
+		bytes[i] = sessionRandLetters[randGen.Intn(len(sessionRandLetters))]
+	}
+
 	// 20 digits (current time) + 1 (:) + 9 (random) = 30 digit session ID
 	return fmt.Sprintf("%020d:%s", time.Now().UnixNano(), string(bytes))
 }
