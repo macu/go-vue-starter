@@ -39,6 +39,8 @@ func ajaxHandler(db *sql.DB, userID uint, w http.ResponseWriter, r *http.Request
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(statusCode)
 				w.Write(js)
+			} else {
+				w.WriteHeader(statusCode)
 			}
 			return
 		}
