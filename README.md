@@ -1,5 +1,16 @@
 # Go Vue Starter
 
+Create env.json with database and server configuration:
+
+```
+{
+	"dbUser": "root",
+	"dbPass": "qazqaz",
+	"dbName": "test",
+	"httpPort": "2020"
+}
+```
+
 Run `sh init.sh` to build the frontend, start the server, and initialize the database.
 
 Run `sh restart.sh` to rebuild the frontend and start the server.

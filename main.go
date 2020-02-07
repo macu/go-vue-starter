@@ -1,12 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"regexp"
 	"strings"
 
@@ -19,7 +19,25 @@ import (
 
 // TOOD Convert all IDs to int64
 
+type config struct {
+	DBUser   string `json:"dbUser"`
+	DBPass   string `json:"dbPass"`
+	DBName   string `json:"dbName"`
+	HTTPPort string `json:"httpPort"`
+}
+
 func main() {
+	configContents, err := ioutil.ReadFile("env.json")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	var config = &config{}
+	err = json.Unmarshal(configContents, config)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	initDB := flag.Bool("initDB", false, "Initialize a fresh database")
 	createNewUser := flag.Bool("createUser", false, "Whether to create a user on startup")
 	newUserUsername := flag.String("username", "", "Login username for new user")
@@ -30,7 +48,7 @@ func main() {
 	// Include file and line in log output
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	db, err := sql.Open("mysql", "root:qazqaz@/test?charset=utf8&parseTime=true")
+	db, err := sql.Open("mysql", config.DBUser+":"+config.DBPass+"@/"+config.DBName+"?charset=utf8&parseTime=true")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -82,18 +100,12 @@ func main() {
 	// All other paths go through index handler
 	r.PathPrefix("/").HandlerFunc(authenticate(indexHandler))
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "2020"
-		log.Printf("Defaulting to port %s", port)
-	}
-
 	s := &http.Server{
-		Addr:    ":" + port,
+		Addr:    ":" + config.HTTPPort,
 		Handler: r,
 	}
 
-	log.Printf("Listening on port %s", port)
+	log.Printf("Listening on port %s", config.HTTPPort)
 
 	if err := s.ListenAndServe(); err != nil {
 		log.Fatalln(err)
