@@ -2,13 +2,13 @@ package main
 
 import (
 	"bytes"
+	crypto_rand "crypto/rand"
 	"database/sql"
 	"encoding/binary"
 	"fmt"
 	"html/template"
 	"log"
 	"math/rand"
-	crypto_rand "math/rand"
 	"net/http"
 	"strings"
 	"time"
