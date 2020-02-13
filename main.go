@@ -17,7 +17,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-// TOOD Convert all IDs to int64
+// TODO Convert all IDs to int64
 
 type config struct {
 	DBUser   string `json:"dbUser"`
@@ -61,7 +61,7 @@ func main() {
 		}
 
 		// Remove comment lines
-		commentMatcher := regexp.MustCompile("(?m)[\r\n]+^--.*$")
+		commentMatcher := regexp.MustCompile("(?m)^\\s*--.*$[\r\n]*")
 		withoutComments := commentMatcher.ReplaceAllString(string(initFileContents), "")
 
 		// Split into statements
