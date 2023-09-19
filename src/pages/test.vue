@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import ajax from '../ajax.js';
+
 export default {
 	data() {
 		return {
@@ -26,24 +28,24 @@ export default {
 		};
 	},
 	beforeRouteEnter (to, from, next) {
-		$.get('/ajax/test').then(response => {
+		ajax.get('/ajax/test').then(response => {
 			next(vm => {
-				vm.message = response.message;
+				vm.message = response.data.message;
 			});
-		}).fail(jqXHR => {
+		}).catch(err => {
 			next(vm => {
-				vm.error = jqXHR;
+				vm.error = err.toJSON();
 			});
 		});
-  },
+	},
 	beforeRouteUpdate(to, from, next) {
-		$.get('/ajax/test').then(response => {
-			vm.message = response.message;
+		ajax.get('/ajax/test').then(response => {
+			vm.message = response.data.message;
 			vm.error = null;
 			next();
-		}).fail(jqXHR => {
+		}).catch(err => {
 			vm.message = '';
-			vm.error = jqXHR;
+			vm.error = err.toJSON();
 			next();
 		});
 	},

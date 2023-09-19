@@ -1,10 +1,7 @@
 #!/bin/sh
 
-# Exit when any command fails
-set -e
+sh update-build-date.sh
 
-# Build frontend
-npm run prod
+npm run prod || { echo 'Client code compilation failed.' ; exit 1; }
 
-# Run backend
 go run *.go

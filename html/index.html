@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<title>App</title>
+
+<link rel="shortcut icon" href="/img/favicon.png"/>
+
+<link rel="stylesheet" href="/css/compiled.css?v={{.VersionStamp}}"/>
+
+<script>
+
+window.appVersion = "{{.VersionStamp}}";
+
+</script>
+
+</head>
+<body>
+
+<div id="app"></div>
+
+{{if .Debug}}
+<!-- Enable Vue DevTools -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.runtime.global.min.js"
+	integrity="sha512-pd/VddzIsL0FYk/YwjJAleZOOeZwKRMSKgy44n5AHCfh3ozMSRs1SRwhdv0qYRNMWooJ1rGuN+MpWBuL/PUXrw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/4.1.0/vuex.global.js"
+	integrity="sha512-QpO3y+QCyhGGkOJpIvJiadzSba8jCWBlmUOEhcHMoIukpItNeW/kKMeCwFMaSixp156ZTMdywPGuF5o27NjnKQ=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/4.2.4/vue-router.global.js"
+	integrity="sha512-tzqrykbBPzkLjhbGVv35Ns6oPqc07a37rsd+LCIakljeUVzeBBFRPAYr/XL9jrLaCmp+TivOSgX2sKOSF84W7Q=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.js"
+	integrity="sha512-kFoMebJcPxdfDstjuwbbJN3q7hQ6O6npC9exDmbTR7HZZUC50s7DKl/MJSiukySAolVrcVmaLRHTmRjwnGCFow=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{else}}
+<!-- Production Vue -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.runtime.global.prod.min.js"
+	integrity="sha512-NCGoqM3yY5Han3juxGpgA0puuxGORZe4nSZQqyjhcAh8T59eIE0AzdOPy+jp07mb3zhLRXHgrO5+uYn8x8kuNw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/4.1.0/vuex.global.prod.min.js"
+	integrity="sha512-92cbSDxR33ukAk6UuekriSTT5z+rW1o7ak6nyzRm/7MBWGUFtqY4MV5buCd/p397sMLseKD8bHWFHTASWsdo3A=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/4.2.4/vue-router.global.prod.min.js"
+	integrity="sha512-doqakykmE3EVJdzd+z2PKrYpanNEDcDwqR2FUBU4SDZQ3kTRgsXJdgnlOZwd6+QkwvMIsuKoDLrdMFN5mVs/Gg=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"
+	integrity="sha512-aoTNnqZcT8B4AmeCFmiSnDlc4Nj/KPaZyB5G7JnOnUEkdNpCZs1LCankiYi01sLTyWy+m2P+W4XM+BuQ3Q4/Dg=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{end}}
+
+<script src="/js/compiled.js?v={{.VersionStamp}}"></script>
+
+</body>
+</html>

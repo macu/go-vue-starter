@@ -1,7 +1,16 @@
 import './styles/app.scss';
 
-import Vue from 'vue';
+import {createApp} from 'vue';
 
 import App from './app.vue';
+import router from './router.js';
+import store from './store.js';
 
-(new Vue(App)).$mount('#app');
+export const app = createApp(App);
+
+window.app = app;
+
+app.use(router);
+app.use(store);
+
+app.mount('#app');
