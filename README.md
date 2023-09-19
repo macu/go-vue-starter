@@ -4,9 +4,9 @@ Create env.json with database and server configuration for local development:
 
 ```
 {
-	"dbUser": "root",
-	"dbPass": "qazqaz",
-	"dbName": "test",
+	"dbUser": "matt",
+	"dbPass": "somepassword",
+	"dbName": "starterdemo",
 	"httpPort": "2020",
 	"versionStamp": ""
 }
@@ -28,7 +28,9 @@ All files in css, img, and js are public.
 ```
 go mod init github.com/macu/go-vue-starter
 go get github.com/jackc/pgx/v4/stdlib
+go get github.com/gorilla/mux
 ```
+
 ## Mac setup
 
 A postgres password must be set before the app can connect.
